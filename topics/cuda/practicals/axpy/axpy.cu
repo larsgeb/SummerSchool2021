@@ -8,8 +8,18 @@
 //      y = y + alpha*x
 //void axpy(int n, double alpha, const double* x, double* y)
 
+__global__ void axpy(int n, double alpha, const double* x, double* y){
+
+    int i = blockIdx.x*blockDim.x + threadIdx.x;
+
+    if (i < n){
+        y[i] = y[i] + alpha * x[i];
+    }
+
+}
+
 int main(int argc, char** argv) {
-    size_t pow = read_arg(argc, argv, 1, 16);
+    size_t pow = read_arg(argc, argv, 1, 12);
     size_t n = 1 << pow;
     auto size_in_bytes = n * sizeof(double);
 
@@ -31,13 +41,17 @@ int main(int argc, char** argv) {
     auto time_H2D = get_time() - start;
 
     // TODO calculate grid dimensions
-    // IGNORE for the first kernel writing exercise
+    int n_blocks = ceil(n / 1024);
+
+    std::cout << "Running " << n_blocks << " blocks of 1024 threads" << std::endl;
 
     // synchronize the host and device so that the timings are accurate
     cudaDeviceSynchronize();
 
     start = get_time();
     // TODO launch kernel (alpha=2.0)
+    double alpha = 2.0;
+    axpy<<<n_blocks, 1024>>>(n, alpha, x_device, y_device);
 
     cudaDeviceSynchronize();
     auto time_axpy = get_time() - start;
@@ -83,4 +97,5 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+
 
