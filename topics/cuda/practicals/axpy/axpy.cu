@@ -41,9 +41,11 @@ int main(int argc, char** argv) {
     auto time_H2D = get_time() - start;
 
     // TODO calculate grid dimensions
-    int n_blocks = ceil(n / 1024);
+    int threads_per_block = 1024;
+    int n_blocks = (n + (threads_per_block-1))/threads_per_block;
 
-    std::cout << "Running " << n_blocks << " blocks of 1024 threads" << std::endl;
+    std::cout << "Running " << n_blocks << " blocks of "
+              << threads_per_block << " threads" << std::endl;
 
     // synchronize the host and device so that the timings are accurate
     cudaDeviceSynchronize();
@@ -51,7 +53,7 @@ int main(int argc, char** argv) {
     start = get_time();
     // TODO launch kernel (alpha=2.0)
     double alpha = 2.0;
-    axpy<<<n_blocks, 1024>>>(n, alpha, x_device, y_device);
+    axpy<<<n_blocks, threads_per_block>>>(n, alpha, x_device, y_device);
 
     cudaDeviceSynchronize();
     auto time_axpy = get_time() - start;
@@ -97,5 +99,6 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+
 
 
