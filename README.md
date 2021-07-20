@@ -8,12 +8,11 @@ Material will be added to the repository throughout the course, which will requi
 
 We will be using Slack to post news and links relevant to the event: you should have received an invitation to join the Summer School Slack workspace.
 
-## Schedule (updated 14.07.2021)
+## Schedule (updated 19.07.2021)
 
-[Full PDF](https://github.com/eth-cscs/SummerSchool2021/files/6835853/2021.-.Effective.High-Performance.Computing.Data.Analytics.Summer.School.2.pdf)
+[Full PDF](https://github.com/eth-cscs/SummerSchool2021/files/6840297/2021.-.Effective.High-Performance.Computing.Data.Analytics.Summer.School.3.pdf)
 
-![Schedule](https://user-images.githubusercontent.com/4578156/126060341-51ce7016-8205-4ef0-9ce3-7f8a93f9f926.png)
-
+![Schedule](https://user-images.githubusercontent.com/4578156/126151194-f6d146c7-c607-4c62-9890-72d3851d84af.png)
 
 ## Obtaining a copy of this repository
 
