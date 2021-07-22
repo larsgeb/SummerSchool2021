@@ -28,6 +28,18 @@ void diffusion(double *x0, double *x1, int nx, int ny, double dt) {
 //                   + x0[i-1,j] + x0[i+1,j]);
 //    }
 //  }
+    int i = threadIdx.x + blockDim.x * blockIdx.x + 1;
+    int j = threadIdx.y + blockDim.y * blockIdx.y + 1;
+
+    auto pos = [&nx] (size_t i, size_t j) {
+        return i + j * nx;
+    };
+
+    if (i < nx - 1 && j < ny - 1){
+        x1[pos(i, j)] = x0[pos(i, j)] + dt * (-4.*x0[pos(i, j)]
+            + x0[pos(i, j-1)] + x0[pos(i, j+1)]
+            + x0[pos(i-1, j)] + x0[pos(i+1, j)]);
+    }
 }
 
 int main(int argc, char** argv) {
@@ -67,11 +79,16 @@ int main(int argc, char** argv) {
     cuda_stream stream;
     cuda_stream copy_stream();
     auto start_event = stream.enqueue_event();
-
+    
     // time stepping loop
+    dim3 block_dim(8, 128);
+    int nbx = (nx - 2 + block_dim.x -1 )/ block_dim.x;
+    int nby = (ny - 2 + block_dim.y -1 )/ block_dim.y;
+    dim3 grid_dim(nbx, nby);
+
     for(auto step=0; step<nsteps; ++step) {
         // TODO: launch the diffusion kernel in 2D
-
+        diffusion<<<grid_dim, block_dim>>>(x0, x1, nx, ny, dt);
         std::swap(x0, x1);
     }
     auto stop_event = stream.enqueue_event();
@@ -126,3 +143,4 @@ void write_to_file(int nx, int ny, double* data) {
     fid << "CENTERING: nodal" << std::endl;
     fid << "BRICK_SIZE: 1.0 1.0 1.0" << std::endl;
 }
+

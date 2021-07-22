@@ -1,4 +1,4 @@
-NVCC_FLAGS=-arch=sm_60 -std=c++11 -O3 -I../include
+NVCC_FLAGS=-arch=sm_60 -std=c++11 -O3 -I../include -Xcompiler -fopenmp
 GCC_FLAGS=-std=c++11 -O3 -fopenmp -I../include
 
 LINK=-lcublas -lcuda
@@ -18,7 +18,7 @@ blur_twice : blur_twice.cu
 	nvcc $(NVCC_FLAGS) blur_twice.cu -o blur_twice $(LINK)
 
 dot : dot.cu
-	nvcc $(NVCC_FLAGS) dot.cu -o dot $(LINK)
+	nvcc $(NVCC_FLAGS) dot.cu -o dot $(LINK) 
 
 string_reverse : string_reverse.cu
 	nvcc $(NVCC_FLAGS) string_reverse.cu -o string_reverse $(LINK)

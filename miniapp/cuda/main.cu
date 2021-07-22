@@ -162,6 +162,7 @@ int main(int argc, char* argv[])
     }
 
     // TODO : ensure that the gpu copy of x_new has the up to date values that were just created
+    x_new.update_device();
 
     flops_bc = 0;
     flops_diff = 0;
@@ -258,4 +259,5 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+
 

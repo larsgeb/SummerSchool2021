@@ -7,6 +7,8 @@
 // host implementation of dot product
 double dot_host(const double *x, const double* y, int n) {
     double sum = 0;
+
+    #pragma omp parallel for reduction(+:sum)
     for(auto i=0; i<n; ++i) {
         sum += x[i]*y[i];
     }
@@ -80,10 +82,13 @@ int main(int argc, char** argv) {
     auto x_d = malloc_device<double>(n);
     auto y_d = malloc_device<double>(n);
 
-    auto start = get_time();
+
     // copy initial conditions to device
+
     copy_to_device<double>(x_h, x_d, n);
     copy_to_device<double>(y_h, y_d, n);
+
+    auto start = get_time();
     auto result   = dot_gpu(x_d, y_d, n);
     auto time_taken = get_time() - start;
     std::cout << "time gpu: " << time_taken << "s\n";
